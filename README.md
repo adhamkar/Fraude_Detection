@@ -60,4 +60,4 @@ Ce projet implémente un système de détection de fraudes en temps réel utilis
 2. **InfluxDB** : Stocke les transactions suspectes pour analyse et visualisation.
 3. **Grafana** : Fournit un tableau de bord interactif et en temps réel pour le suivi.
 
-![Schéma de l’architecture](img/png_archi.png)
+![img_8.png](img_8.png)
