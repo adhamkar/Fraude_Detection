@@ -2,6 +2,7 @@ package org.exemple;
 
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
@@ -26,6 +27,7 @@ public class FraudDetectionApp {
     private static final String INFLUXDB_ORG = "enset-org";
     private static final String INFLUXDB_URL = "http://localhost:8086";
     private static final String INFLUXDB_TOKEN="MmgV4_oAkTJHbe2mJ9Cn6-pJzL9nhoMCHfPCEVQ_IDjHNBv01CgUCSzNLg-7yuTRqRqnFBQiIDQYmOT1rgdrQA==";
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static void main(String[] args) {
         Properties prop = new Properties();
@@ -69,7 +71,8 @@ public class FraudDetectionApp {
                                 .addTag("userId", transaction.getUserId())
                                 .addField("amount", transaction.getAmount())
                                 .addField("timestamp", transaction.getTimestamp());
-                System.out.println("Writing point to InfluxDB: " + point.toString());
+                //System.out.println("Writing point to InfluxDB: " + point.toString());
+                System.out.println("Fraud Detected :"+ transaction.toString());
                  writeApi.writePoint(point);
 
             }catch (Exception e){
