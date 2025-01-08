@@ -9,6 +9,7 @@ import java.util.Properties;
 public class TransactionProducer {
     public static void main(String[] args) throws InterruptedException {
         Properties props = new Properties();
+        props.put("application.id","fraud-TP");
         props.put("bootstrap.servers", "localhost:9092");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
@@ -24,10 +25,17 @@ public class TransactionProducer {
             String key = "user" + (int)(Math.random() * 100 + 1); // Randomize user
             String value = "{\"userId\":\"" + key + "\", \"amount\": " + (int)(Math.random() * 20000) + ", \"timestamp\": \""+rand+"\"}";
             ProducerRecord<String, String> record = new ProducerRecord<>("transactions-input", key, value);
-            transactionProducer.send(record);
+            transactionProducer.send(record, (metadata, exception) -> {
+                if (exception != null) {
+                    System.err.println("Error sending message: " + exception.getMessage());
+                } else {
+                    System.out.printf("Message sent successfully to partition %d, offset %d%n",
+                            metadata.partition(), metadata.offset());
+                    System.out.println("value: "+record.value());
+                }
+            });
             Thread.sleep(1000); // 1-second delay for readability (optional)
         }
-
 
     }
 }
